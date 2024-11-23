@@ -3681,8 +3681,6 @@ function baseToolModule () {
 										entry.graphics.forEach(it => map.thegraphics.create(it));
 										entry.paths.forEach(it => map.thepaths.create(it));
 										entry.text.forEach(it => map.thetexts.create(it));
-										entry.doors.forEach(it => map.doors.create(it));
-										entry.windows.forEach(it => map.windows.create(it));
 										map.save();
 										break;
 									}
@@ -3933,8 +3931,6 @@ function baseToolModule () {
 									graphics: (map.thegraphics || []).map(g => g.attributes),
 									text: (map.thetexts || []).map(t => t.attributes),
 									paths: (map.thepaths || []).map(p => p.attributes),
-                                    doors: (map.doors || []).map(d => d.attributes),
-                                    windows: (map.windows || []).map(w => w.attributes),
 								};
 							};
 
