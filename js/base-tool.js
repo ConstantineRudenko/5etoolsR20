@@ -631,8 +631,8 @@ function baseTool () {
 			},
 			openFn: () => {
 				function modifyPage (model, changes) {
-					changes.forEach( change => { model.attributes[change.label] = change.value
-						});
+					changes.forEach(change => { model.attributes[change.label] = change.value
+					});
 					model.save()
 				}
 
@@ -662,31 +662,31 @@ function baseTool () {
 					});
 				});
 
-				function collectCheckedInputs() {
-					const table = document.getElementById('modifications-table');
-					const rows = table.querySelectorAll('tbody tr');
+				function collectCheckedInputs () {
+					const table = document.getElementById("modifications-table");
+					const rows = table.querySelectorAll("tbody tr");
 					const checkedInputs = [];
 
 					rows.forEach(row => {
-					  const applyCheckbox = row.querySelector('td:first-child input[type="checkbox"]');
-					  if (applyCheckbox.checked) {
-						const input = row.querySelector("#"+applyCheckbox.id.slice("apply_".length));
-						const inputName = input.id;
-						var inputValue = ""
+						const applyCheckbox = row.querySelector("td:first-child input[type=\"checkbox\"]");
+						if (applyCheckbox.checked) {
+							const input = row.querySelector(`#${applyCheckbox.id.slice("apply_".length)}`);
+							const inputName = input.id;
+							let inputValue = ""
 
-						if (input.type == "checkbox")
-						{
-							inputValue = input.checked
-						}
-						else {
-							inputValue = input.options[input.selectedIndex].value
-						}
+							if (input.type === "checkbox")
+							{
+								inputValue = input.checked
+							}
+							else {
+								inputValue = input.options[input.selectedIndex].value
+							}
 
-						checkedInputs.push({
-						  label: inputName,
-						  value: inputValue
-						});
-					  }
+							checkedInputs.push({
+								label: inputName,
+								value: inputValue,
+							});
+						}
 					});
 					return checkedInputs
 				}
@@ -700,7 +700,7 @@ function baseTool () {
 
 					checkedInputs = collectCheckedInputs()
 					sel.forEach(m => {
-							modifyPage(m, checkedInputs);
+						modifyPage(m, checkedInputs);
 					});
 					$cbAll.prop("checked", false);
 				});
