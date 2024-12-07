@@ -550,6 +550,163 @@ function baseTool () {
 			},
 		},
 		{
+			name: "Mass-Modify Pages",
+			desc: "Quickly modify multiple pages.",
+			html: `
+				<div id="d20plus-mass-page-modify" title="Better20 - Mass-Modify Pages">
+					<div id="modify-pages-list">
+						<div class="list" style="transform: translateZ(0); max-height: 490px; overflow-y: scroll; overflow-x: hidden; margin-bottom: 10px;"><i>Loading...</i></div>
+					</div>
+					<hr>
+                    <p><label class="ib"><input type="checkbox" class="select-all"> Select All</label></p>
+					<table id="modifications-table" style="border-collapse: separate; border-spacing: 10px;">
+					<thead>
+						<tr>
+							<th>Overwrite</th>
+							<th>Label</th>
+							<th>Input</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- I could not make it work, but it should not be a hard fix -->
+						<!--
+						<tr>
+							<td><input type="checkbox" id="apply_gridtype" name="apply_gridtype"></td>
+							<td><label for="gridtype">Grid Type:</label></td>
+							<td><select id="gridtype">
+								<option selected="" value="square">Square</option>
+								<option value="hex">Hex (V)</option>
+								<option value="hexr">Hex (H)</option>
+								<option value="dimetric">Dimetric</option>
+								<option value="isometric">Isometric</option>
+								</select>
+							</td>
+						</tr>
+						-->
+						<tr>
+							<td><input type="checkbox" id="apply_diagonaltype" name="apply_diagonaltype"></td>
+							<td><label for="diagonaltype">Diagonal Type:</label></td>
+							<td><select id="diagonaltype">
+								<option class="squareonly" selected="" value="foure" style="">D&amp;D 5E/4E Compatible</option>
+								<option class="squareonly" value="threefive" style="">Pathfinder/3.5E Compatible</option>
+								<option class="squareonly" value="manhattan" style="">Manhattan</option>
+								<option class="hexonly" value="hex" style="display: none;">Hex Path</option>
+								<option value="pythagorean">Euclidean</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" id="apply_lightrestrictmove" name="apply_lightrestrictmove"></td>
+							<td><label for="lightrestrictmove">Dynamic lighting barriers restrict movement:</label></td>
+							<td><input type="checkbox" id="lightrestrictmove" name="lightrestrictmove"></td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" id="apply_dynamic_lighting_enabled" name="apply_dynamic_lighting_enabled"></td>
+							<td><label for="dynamic_lighting_enabled">Dynamic Lighting Enabled:</label></td>
+							<td><input type="checkbox" id="dynamic_lighting_enabled" name="dynamic_lighting_enabled"></td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" id="apply_daylight_mode_enabled" name="apply_daylight_mode_enabled"></td>
+							<td><label for="daylight_mode_enabled">Daylight mode:</label></td>
+							<td><input type="checkbox" id="daylight_mode_enabled" name="daylight_mode_enabled"></td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" id="apply_lightupdatedrop" name="apply_lightupdatedrop"></td>
+							<td><label for="lightupdatedrop">Light Update Drop:</label></td>
+							<td><input type="checkbox" id="lightupdatedrop" name="lightupdatedrop"></td>
+						</tr>
+					</tbody>
+				</table>
+                <hr>
+				<p style="text-align: right;"><button class="btn btn-danger modifier">Apply</button></p>
+				</div>
+				`,
+			dialogFn: () => {
+				$("#d20plus-mass-page-modify").dialog({
+					autoOpen: false,
+					resizable: true,
+					width: 600,
+					height: 800,
+				});
+			},
+			openFn: () => {
+				function modifyPage (model, changes) {
+					changes.forEach( change => { model.attributes[change.label] = change.value
+						});
+					model.save()
+				}
+
+				const $win = $("#d20plus-mass-page-modify");
+				$win.dialog("open");
+
+				const $lst = $win.find(`.list`).empty();
+
+				d20.Campaign.pages.models.forEach(m => {
+					$lst.append(`
+							<label class="import-cb-label import-cb-label--img" data-listid="${m.id}">
+								<input type="checkbox">
+								<img class="import-label__img" src="${m.attributes.thumbnail}">
+								<span class="name col-9">${m.attributes.name}</span>
+								<span style="display: none;" class="page-id">${m.id}</span>
+							</label>
+						`);
+				});
+
+				const pageList = new List("modify-pages-list", {
+					valueNames: ["name", "page-id"],
+				});
+
+				const $cbAll = $win.find(`.select-all`).off("click").click(() => {
+					pageList.items.forEach(it => {
+						$(it.elm).find(`input[type="checkbox"]`).prop("checked", $cbAll.prop("checked"));
+					});
+				});
+
+				function collectCheckedInputs() {
+					const table = document.getElementById('modifications-table');
+					const rows = table.querySelectorAll('tbody tr');
+					const checkedInputs = [];
+
+					rows.forEach(row => {
+					  const applyCheckbox = row.querySelector('td:first-child input[type="checkbox"]');
+					  if (applyCheckbox.checked) {
+						const input = row.querySelector("#"+applyCheckbox.id.slice("apply_".length));
+						const inputName = input.id;
+						var inputValue = ""
+
+						if (input.type == "checkbox")
+						{
+							inputValue = input.checked
+						}
+						else {
+							inputValue = input.options[input.selectedIndex].value
+						}
+
+						checkedInputs.push({
+						  label: inputName,
+						  value: inputValue
+						});
+					  }
+					});
+					return checkedInputs
+				}
+
+				const $btnDel = $win.find(`.modifier`).off("click").click(() => {
+					const sel = pageList.items
+						.filter(it => $(it.elm).find(`input`).prop("checked"))
+						.map(it => $(it.elm).attr("data-listid"))
+						.map(pId => d20.Campaign.pages.models.find(it => it.id === pId))
+						.filter(it => it);
+
+					checkedInputs = collectCheckedInputs()
+					sel.forEach(m => {
+							modifyPage(m, checkedInputs);
+					});
+					$cbAll.prop("checked", false);
+				});
+			},
+		},
+		{
 			name: "Quantum Token Entangler",
 			desc: "Connect tokens between pages, linking their positions.",
 			html: `
