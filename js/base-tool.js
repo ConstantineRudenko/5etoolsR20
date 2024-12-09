@@ -654,7 +654,7 @@ function baseTool () {
 				});
 
 				function collectCheckedInputs () {
-					const table = document.querySelector("[name=modifications-table]");
+					const table = $win.find("[name=modifications-table]").get(0);
 					const rows = table.querySelectorAll("tbody tr");
 					const checkedInputs = [];
 
