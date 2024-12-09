@@ -457,7 +457,7 @@ function baseTool () {
 			desc: "Quickly delete multiple pages.",
 			html: `
 				<div id="d20plus-mass-page-delete" title="Better20 - Mass-Delete Pages">
-					<div id="del-pages-list">
+					<div name="del-pages-list">
 						<div class="list" style="transform: translateZ(0); max-height: 490px; overflow-y: scroll; overflow-x: hidden; margin-bottom: 10px;"><i>Loading...</i></div>
 					</div>
 					<hr>
@@ -523,20 +523,18 @@ function baseTool () {
 						`);
 				});
 
-				const pageList = new List("del-pages-list", {
-					valueNames: ["name", "page-id"],
-				});
+				const pageList = [... $win.find("[name=del-pages-list]").get(0).querySelectorAll("div.list label")]
 
 				const $cbAll = $win.find(`.select-all`).off("click").click(() => {
 					pageList.items.forEach(it => {
-						$(it.elm).find(`input[type="checkbox"]`).prop("checked", $cbAll.prop("checked"));
+						$(it).find(`input[type="checkbox"]`).prop("checked", $cbAll.prop("checked"));
 					});
 				});
 
 				const $btnDel = $win.find(`.deleter`).off("click").click(() => {
-					const sel = pageList.items
-						.filter(it => $(it.elm).find(`input`).prop("checked"))
-						.map(it => $(it.elm).attr("data-listid"))
+					const sel = pageList
+						.filter(it => $(it).find(`input`).prop("checked"))
+						.map(it => $(it).attr("data-listid"))
 						.map(pId => d20.Campaign.pages.models.find(it => it.id === pId))
 						.filter(it => it);
 
@@ -554,7 +552,7 @@ function baseTool () {
 			desc: "Quickly modify multiple pages.",
 			html: `
 				<div id="d20plus-mass-page-modify" title="Better20 - Mass-Modify Pages">
-					<div id="modify-pages-list">
+					<div name="modify-pages-list">
 						<div class="list" style="transform: translateZ(0); max-height: 490px; overflow-y: scroll; overflow-x: hidden; margin-bottom: 10px;"><i>Loading...</i></div>
 					</div>
 					<hr>
@@ -643,13 +641,11 @@ function baseTool () {
 						`);
 				});
 
-				const pageList = new List("modify-pages-list", {
-					valueNames: ["name", "page-id"],
-				});
+				const pageList = [... $win.find("[name=modify-pages-list]").get(0).querySelectorAll("div.list label")]
 
 				const $cbAll = $win.find(`.select-all`).off("click").click(() => {
-					pageList.items.forEach(it => {
-						$(it.elm).find(`input[type="checkbox"]`).prop("checked", $cbAll.prop("checked"));
+					pageList.forEach(it => {
+						$(it).find(`input[type="checkbox"]`).prop("checked", $cbAll.prop("checked"));
 					});
 				});
 
@@ -677,9 +673,9 @@ function baseTool () {
 				}
 
 				const $btnMod = $win.find("[name=btn-apply]").off("click").click(() => {
-					const sel = pageList.items
-						.filter(it => $(it.elm).find(`input`).prop("checked"))
-						.map(it => $(it.elm).attr("data-listid"))
+					const sel = pageList
+						.filter(it => $(it).find(`input`).prop("checked"))
+						.map(it => $(it).attr("data-listid"))
 						.map(pId => d20.Campaign.pages.models.find(it => it.id === pId))
 						.filter(it => it);
 
