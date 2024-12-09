@@ -554,7 +554,7 @@ function baseTool () {
 			desc: "Quickly modify multiple pages.",
 			html: `
 				<div id="d20plus-mass-page-modify" title="Better20 - Mass-Modify Pages">
-					<div name="modify-pages-list">
+					<div id="modify-pages-list">
 						<div class="list" style="transform: translateZ(0); max-height: 490px; overflow-y: scroll; overflow-x: hidden; margin-bottom: 10px;"><i>Loading...</i></div>
 					</div>
 					<hr>
@@ -593,7 +593,7 @@ function baseTool () {
 							</td>
 						</tr>
 						<tr>
-							<td><input type="checkbox"name="apply_lightrestrictmove"></td>
+							<td><input type="checkbox" name="apply_lightrestrictmove"></td>
 							<td><label for="lightrestrictmove">Dynamic lighting barriers restrict movement:</label></td>
 							<td><input type="checkbox" name="lightrestrictmove"></td>
 						</tr>
@@ -654,14 +654,14 @@ function baseTool () {
 				});
 
 				function collectCheckedInputs () {
-					const table = document.getElementById("modifications-table");
+					const table = document.querySelector("[name=modifications-table]");
 					const rows = table.querySelectorAll("tbody tr");
 					const checkedInputs = [];
 
 					rows.forEach(row => {
 						const applyCheckbox = row.querySelector(`td:first-child input[type="checkbox"]`);
 						if (applyCheckbox.checked) {
-							const input = row.querySelector(`[name="${applyCheckbox.id.slice("apply_".length)}"]`)
+							const input = row.querySelector(`[name="${applyCheckbox.name.slice("apply_".length)}"]`)
 							let inputValue = ""
 
 							if (input.type === "checkbox") inputValue = input.checked;
@@ -684,7 +684,7 @@ function baseTool () {
 						.filter(it => it);
 
 					const checkedInputs = collectCheckedInputs()
-					sel.forEach(m => {
+					sel.forEach(model => {
 						checkedInputs.forEach(change => { model.attributes[change.label] = change.value});
 						model.save();
 					});
