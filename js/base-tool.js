@@ -503,6 +503,7 @@ function baseTool () {
 						model.destroy();
 						d20.Campaign.activePageIndex > n && (d20.Campaign.activePageIndex -= 1);
 
+						pageList.filter(it => $(it).attr("data-listid") == model.id).map(e => {e.remove()})
 						pageList.splice(pageList.map(it => $(it).attr("data-listid")).indexOf(model.id), 1);
 					}
 				}
