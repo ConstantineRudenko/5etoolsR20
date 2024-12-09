@@ -554,7 +554,7 @@ function baseTool () {
 			desc: "Quickly modify multiple pages.",
 			html: `
 				<div id="d20plus-mass-page-modify" title="Better20 - Mass-Modify Pages">
-					<div id="modify-pages-list">
+					<div name="modify-pages-list">
 						<div class="list" style="transform: translateZ(0); max-height: 490px; overflow-y: scroll; overflow-x: hidden; margin-bottom: 10px;"><i>Loading...</i></div>
 					</div>
 					<hr>
@@ -568,12 +568,10 @@ function baseTool () {
 						</tr>
 					</thead>
 					<tbody>
-						<!-- I could not make it work, but it should not be a hard fix -->
-						<!--
 						<tr>
-							<td><input type="checkbox" id="apply_gridtype" name="apply_gridtype"></td>
-							<td><label for="gridtype">Grid Type:</label></td>
-							<td><select id="gridtype">
+							<td><input type="checkbox" id="apply_grid_type" name="apply_grid_type"></td>
+							<td><label for="grid_type">Grid Type:</label></td>
+							<td><select id="grid_type">
 								<option selected="" value="square">Square</option>
 								<option value="hex">Hex (V)</option>
 								<option value="hexr">Hex (H)</option>
@@ -582,7 +580,6 @@ function baseTool () {
 								</select>
 							</td>
 						</tr>
-						-->
 						<tr>
 							<td><input type="checkbox" id="apply_diagonaltype" name="apply_diagonaltype"></td>
 							<td><label for="diagonaltype">Diagonal Type:</label></td>
@@ -630,12 +627,6 @@ function baseTool () {
 				});
 			},
 			openFn: () => {
-				function modifyPage (model, changes) {
-					changes.forEach(change => { model.attributes[change.label] = change.value
-					});
-					model.save()
-				}
-
 				const $win = $("#d20plus-mass-page-modify");
 				$win.dialog("open");
 
@@ -668,19 +659,14 @@ function baseTool () {
 					const checkedInputs = [];
 
 					rows.forEach(row => {
-						const applyCheckbox = row.querySelector("td:first-child input[type=\"checkbox\"]");
+						const applyCheckbox = row.querySelector(`td:first-child input[type="checkbox"]`);
 						if (applyCheckbox.checked) {
-							const input = row.querySelector(`#${applyCheckbox.id.slice("apply_".length)}`);
+							const input = row.querySelector(`[name="${applyCheckbox.id.slice("apply_".length)}"]`)
 							const inputName = input.id;
 							let inputValue = ""
 
-							if (input.type === "checkbox")
-							{
-								inputValue = input.checked
-							}
-							else {
-								inputValue = input.options[input.selectedIndex].value
-							}
+							if (input.type === "checkbox") inputValue = input.checked;
+							else inputValue = input.options[input.selectedIndex].value;
 
 							checkedInputs.push({
 								label: inputName,
@@ -698,9 +684,10 @@ function baseTool () {
 						.map(pId => d20.Campaign.pages.models.find(it => it.id === pId))
 						.filter(it => it);
 
-					checkedInputs = collectCheckedInputs()
+					const checkedInputs = collectCheckedInputs()
 					sel.forEach(m => {
-						modifyPage(m, checkedInputs);
+						checkedInputs.forEach(change => { model.attributes[change.label] = change.value});
+						model.save();
 					});
 					$cbAll.prop("checked", false);
 				});
