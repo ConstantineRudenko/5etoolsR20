@@ -503,7 +503,7 @@ function baseTool () {
 						model.destroy();
 						d20.Campaign.activePageIndex > n && (d20.Campaign.activePageIndex -= 1);
 
-						pageList.remove("page-id", model.id);
+						pageList.splice(pageList.map(it => $(it).attr("data-listid")).indexOf(model.id), 1);
 					}
 				}
 
@@ -526,7 +526,7 @@ function baseTool () {
 				const pageList = [... $win.find("[name=del-pages-list]").get(0).querySelectorAll("div.list label")]
 
 				const $cbAll = $win.find(`.select-all`).off("click").click(() => {
-					pageList.items.forEach(it => {
+					pageList.forEach(it => {
 						$(it).find(`input[type="checkbox"]`).prop("checked", $cbAll.prop("checked"));
 					});
 				});
