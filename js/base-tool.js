@@ -559,7 +559,7 @@ function baseTool () {
 					</div>
 					<hr>
                     <p><label class="ib"><input type="checkbox" class="select-all"> Select All</label></p>
-					<table id="modifications-table" style="border-collapse: separate; border-spacing: 10px;">
+					<table name="modifications-table" style="border-collapse: separate; border-spacing: 10px;">
 					<thead>
 						<tr>
 							<th>Overwrite</th>
@@ -569,9 +569,9 @@ function baseTool () {
 					</thead>
 					<tbody>
 						<tr>
-							<td><input type="checkbox" id="apply_grid_type" name="apply_grid_type"></td>
+							<td><input type="checkbox" name="apply_grid_type"></td>
 							<td><label for="grid_type">Grid Type:</label></td>
-							<td><select id="grid_type">
+							<td><select name="grid_type">
 								<option selected="" value="square">Square</option>
 								<option value="hex">Hex (V)</option>
 								<option value="hexr">Hex (H)</option>
@@ -581,9 +581,9 @@ function baseTool () {
 							</td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" id="apply_diagonaltype" name="apply_diagonaltype"></td>
+							<td><input type="checkbox" name="apply_diagonaltype"></td>
 							<td><label for="diagonaltype">Diagonal Type:</label></td>
-							<td><select id="diagonaltype">
+							<td><select name="diagonaltype">
 								<option class="squareonly" selected="" value="foure" style="">D&amp;D 5E/4E Compatible</option>
 								<option class="squareonly" value="threefive" style="">Pathfinder/3.5E Compatible</option>
 								<option class="squareonly" value="manhattan" style="">Manhattan</option>
@@ -593,29 +593,29 @@ function baseTool () {
 							</td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" id="apply_lightrestrictmove" name="apply_lightrestrictmove"></td>
+							<td><input type="checkbox"name="apply_lightrestrictmove"></td>
 							<td><label for="lightrestrictmove">Dynamic lighting barriers restrict movement:</label></td>
-							<td><input type="checkbox" id="lightrestrictmove" name="lightrestrictmove"></td>
+							<td><input type="checkbox" name="lightrestrictmove"></td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" id="apply_dynamic_lighting_enabled" name="apply_dynamic_lighting_enabled"></td>
+							<td><input type="checkbox" name="apply_dynamic_lighting_enabled"></td>
 							<td><label for="dynamic_lighting_enabled">Dynamic Lighting Enabled:</label></td>
-							<td><input type="checkbox" id="dynamic_lighting_enabled" name="dynamic_lighting_enabled"></td>
+							<td><input type="checkbox" name="dynamic_lighting_enabled"></td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" id="apply_daylight_mode_enabled" name="apply_daylight_mode_enabled"></td>
+							<td><input type="checkbox" name="apply_daylight_mode_enabled"></td>
 							<td><label for="daylight_mode_enabled">Daylight mode:</label></td>
-							<td><input type="checkbox" id="daylight_mode_enabled" name="daylight_mode_enabled"></td>
+							<td><input type="checkbox" name="daylight_mode_enabled"></td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" id="apply_lightupdatedrop" name="apply_lightupdatedrop"></td>
+							<td><input type="checkbox" name="apply_lightupdatedrop"></td>
 							<td><label for="lightupdatedrop">Light Update Drop:</label></td>
-							<td><input type="checkbox" id="lightupdatedrop" name="lightupdatedrop"></td>
+							<td><input type="checkbox" name="lightupdatedrop"></td>
 						</tr>
 					</tbody>
 				</table>
                 <hr>
-				<p style="text-align: right;"><button class="btn btn-danger modifier">Apply</button></p>
+				<p style="text-align: right;"><button name="btn-apply" class="btn btn-danger modifier">Apply</button></p>
 				</div>
 				`,
 			dialogFn: () => {
@@ -662,14 +662,13 @@ function baseTool () {
 						const applyCheckbox = row.querySelector(`td:first-child input[type="checkbox"]`);
 						if (applyCheckbox.checked) {
 							const input = row.querySelector(`[name="${applyCheckbox.id.slice("apply_".length)}"]`)
-							const inputName = input.id;
 							let inputValue = ""
 
 							if (input.type === "checkbox") inputValue = input.checked;
 							else inputValue = input.options[input.selectedIndex].value;
 
 							checkedInputs.push({
-								label: inputName,
+								label: input.name,
 								value: inputValue,
 							});
 						}
@@ -677,7 +676,7 @@ function baseTool () {
 					return checkedInputs
 				}
 
-				const $btnDel = $win.find(`.modifier`).off("click").click(() => {
+				const $btnMod = $win.find("[name=btn-apply]").off("click").click(() => {
 					const sel = pageList.items
 						.filter(it => $(it.elm).find(`input`).prop("checked"))
 						.map(it => $(it.elm).attr("data-listid"))
