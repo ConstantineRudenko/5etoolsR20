@@ -531,6 +531,7 @@ function baseTool () {
 					pageList.items.forEach(it => {
 						$(it.elm).find(`input[type="checkbox"]`).prop("checked", $cbAll.prop("checked"));
 					});
+				});
 
 				const $btnDel = $win.find(`.deleter`).off("click").click(() => {
 					const sel = pageList.items
