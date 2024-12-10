@@ -503,8 +503,7 @@ function baseTool () {
 						model.destroy();
 						d20.Campaign.activePageIndex > n && (d20.Campaign.activePageIndex -= 1);
 
-						pageList.filter(it => $(it).attr("data-listid") == model.id).map(e => {e.remove()})
-						pageList.splice(pageList.map(it => $(it).attr("data-listid")).indexOf(model.id), 1);
+						pageList.remove("page-id", model.id);
 					}
 				}
 
@@ -524,18 +523,19 @@ function baseTool () {
 						`);
 				});
 
-				const pageList = [... $win.find("[name=del-pages-list]").get(0).querySelectorAll("div.list label")]
+				const pageList = new List($win.find("[name=del-pages-list]").get(0), {
+					valueNames: ["name", "page-id"],
+				});
 
 				const $cbAll = $win.find(`.select-all`).off("click").click(() => {
-					pageList.forEach(it => {
-						$(it).find(`input[type="checkbox"]`).prop("checked", $cbAll.prop("checked"));
-					});
+					pageList.items.forEach(it => {
+						$(it.elm).find(`input[type="checkbox"]`).prop("checked", $cbAll.prop("checked"))
 				});
 
 				const $btnDel = $win.find(`.deleter`).off("click").click(() => {
-					const sel = pageList
-						.filter(it => $(it).find(`input`).prop("checked"))
-						.map(it => $(it).attr("data-listid"))
+					const sel = pageList.items
+						.filter(it => $(it.elm).find(`input`).prop("checked"))
+						.map(it => $(it.elm).attr("data-listid"))
 						.map(pId => d20.Campaign.pages.models.find(it => it.id === pId))
 						.filter(it => it);
 
@@ -642,11 +642,13 @@ function baseTool () {
 						`);
 				});
 
-				const pageList = [... $win.find("[name=modify-pages-list]").get(0).querySelectorAll("div.list label")]
+				const pageList = new List( $win.find("[name=modify-pages-list]").get(0), {
+					valueNames: ["name", "page-id"],
+				});
 
 				const $cbAll = $win.find(`.select-all`).off("click").click(() => {
-					pageList.forEach(it => {
-						$(it).find(`input[type="checkbox"]`).prop("checked", $cbAll.prop("checked"));
+					pageList.items.forEach(it => {
+						$(it.elm).find(`input[type="checkbox"]`).prop("checked", $cbAll.prop("checked"));
 					});
 				});
 
@@ -674,9 +676,9 @@ function baseTool () {
 				}
 
 				const $btnMod = $win.find("[name=btn-apply]").off("click").click(() => {
-					const sel = pageList
-						.filter(it => $(it).find(`input`).prop("checked"))
-						.map(it => $(it).attr("data-listid"))
+					const sel = pageList.items
+						.filter(it => $(it.elm).find(`input`).prop("checked"))
+						.map(it => $(it.elm).attr("data-listid"))
 						.map(pId => d20.Campaign.pages.models.find(it => it.id === pId))
 						.filter(it => it);
 
