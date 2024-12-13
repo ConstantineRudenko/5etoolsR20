@@ -569,8 +569,8 @@ function baseTool () {
 					</thead>
 					<tbody>
 						<tr>
-							<td><input type="checkbox" name="apply_grid_type"></td>
-							<td><label for="grid_type">Grid Type:</label></td>
+							<td class="text-center"><label><input type="checkbox" name="apply_grid_type"></label></td>
+							<td><label for="grid_type">General - Grid - Type:</label></td>
 							<td><select name="grid_type">
 								<option selected="" value="square">Square</option>
 								<option value="hex">Hex (V)</option>
@@ -581,8 +581,8 @@ function baseTool () {
 							</td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" name="apply_diagonaltype"></td>
-							<td><label for="diagonaltype">Diagonal Type:</label></td>
+							<td class="text-center"><label><input type="checkbox" name="apply_diagonaltype"></label></td>
+							<td><label for="diagonaltype">General - Grid - Measurement:</label></td>
 							<td><select name="diagonaltype">
 								<option class="squareonly" selected="" value="foure" style="">D&amp;D 5E/4E Compatible</option>
 								<option class="squareonly" value="threefive" style="">Pathfinder/3.5E Compatible</option>
@@ -593,29 +593,29 @@ function baseTool () {
 							</td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" name="apply_lightrestrictmove"></td>
-							<td><label for="lightrestrictmove">Dynamic lighting barriers restrict movement:</label></td>
+							<td class="text-center"><label><input type="checkbox" name="apply_lightrestrictmove"></label></td>
+							<td><label for="lightrestrictmove">General - Movement - Dynamic lighting barriers restrict movement:</label></td>
 							<td><input type="checkbox" name="lightrestrictmove"></td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" name="apply_dynamic_lighting_enabled"></td>
-							<td><label for="dynamic_lighting_enabled">Dynamic Lighting Enabled:</label></td>
+							<td class="text-center"><label><input type="checkbox" name="apply_dynamic_lighting_enabled"></label></td>
+							<td><label for="dynamic_lighting_enabled">Lighting - Dynamic Lighting:</label></td>
 							<td><input type="checkbox" name="dynamic_lighting_enabled"></td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" name="apply_daylight_mode_enabled"></td>
-							<td><label for="daylight_mode_enabled">Daylight mode:</label></td>
+							<td class="text-center"><label><input type="checkbox" name="apply_daylight_mode_enabled"></label></td>
+							<td><label for="daylight_mode_enabled">Lighting - Daylight mode:</label></td>
 							<td><input type="checkbox" name="daylight_mode_enabled"></td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" name="apply_lightupdatedrop"></td>
-							<td><label for="lightupdatedrop">Light Update Drop:</label></td>
+							<td class="text-center"><label><input type="checkbox" name="apply_lightupdatedrop"></label></td>
+							<td><label for="lightupdatedrop">Lighting - Update when Token Drop:</label></td>
 							<td><input type="checkbox" name="lightupdatedrop"></td>
 						</tr>
 					</tbody>
 				</table>
                 <hr>
-				<p style="text-align: right;"><button name="btn-apply" class="btn btn-danger modifier">Apply</button></p>
+				<p style="text-align: right;"><button name="btn-apply" class="btn btn-primary modifier">Apply</button></p>
 				</div>
 				`,
 			dialogFn: () => {
