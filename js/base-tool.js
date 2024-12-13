@@ -457,7 +457,7 @@ function baseTool () {
 			desc: "Quickly delete multiple pages.",
 			html: `
 				<div id="d20plus-mass-page-delete" title="Better20 - Mass-Delete Pages">
-					<div id="del-pages-list">
+					<div name="del-pages-list">
 						<div class="list" style="transform: translateZ(0); max-height: 490px; overflow-y: scroll; overflow-x: hidden; margin-bottom: 10px;"><i>Loading...</i></div>
 					</div>
 					<hr>
@@ -523,7 +523,7 @@ function baseTool () {
 						`);
 				});
 
-				const pageList = new List("del-pages-list", {
+				const pageList = new List($win.find("[name=del-pages-list]").get(0), {
 					valueNames: ["name", "page-id"],
 				});
 
@@ -544,6 +544,149 @@ function baseTool () {
 						if (m.id !== d20.Campaign.get("playerpageid") && m.id !== d20.Campaign.activePage().id) {
 							deletePage(m, pageList);
 						}
+					});
+					$cbAll.prop("checked", false);
+				});
+			},
+		},
+		{
+			name: "Mass-Modify Pages",
+			desc: "Quickly modify multiple pages.",
+			html: `
+				<div id="d20plus-mass-page-modify" title="Better20 - Mass-Modify Pages">
+					<div name="modify-pages-list">
+						<div class="list" style="transform: translateZ(0); max-height: 490px; overflow-y: scroll; overflow-x: hidden; margin-bottom: 10px;"><i>Loading...</i></div>
+					</div>
+					<hr>
+                    <p><label class="ib"><input type="checkbox" class="select-all"> Select All</label></p>
+					<table name="modifications-table" style="border-collapse: separate; border-spacing: 10px;">
+					<thead>
+						<tr>
+							<th>Overwrite</th>
+							<th>Label</th>
+							<th>Input</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="text-center"><label><input type="checkbox" name="apply_grid_type"></label></td>
+							<td><label for="grid_type">General - Grid - Type:</label></td>
+							<td><select name="grid_type">
+								<option selected="" value="square">Square</option>
+								<option value="hex">Hex (V)</option>
+								<option value="hexr">Hex (H)</option>
+								<option value="dimetric">Dimetric</option>
+								<option value="isometric">Isometric</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center"><label><input type="checkbox" name="apply_diagonaltype"></label></td>
+							<td><label for="diagonaltype">General - Grid - Measurement:</label></td>
+							<td><select name="diagonaltype">
+								<option class="squareonly" selected="" value="foure" style="">D&amp;D 5E/4E Compatible</option>
+								<option class="squareonly" value="threefive" style="">Pathfinder/3.5E Compatible</option>
+								<option class="squareonly" value="manhattan" style="">Manhattan</option>
+								<option class="hexonly" value="hex" style="display: none;">Hex Path</option>
+								<option value="pythagorean">Euclidean</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center"><label><input type="checkbox" name="apply_lightrestrictmove"></label></td>
+							<td><label for="lightrestrictmove">General - Movement - Dynamic lighting barriers restrict movement:</label></td>
+							<td><input type="checkbox" name="lightrestrictmove"></td>
+						</tr>
+						<tr>
+							<td class="text-center"><label><input type="checkbox" name="apply_dynamic_lighting_enabled"></label></td>
+							<td><label for="dynamic_lighting_enabled">Lighting - Dynamic Lighting:</label></td>
+							<td><input type="checkbox" name="dynamic_lighting_enabled"></td>
+						</tr>
+						<tr>
+							<td class="text-center"><label><input type="checkbox" name="apply_daylight_mode_enabled"></label></td>
+							<td><label for="daylight_mode_enabled">Lighting - Daylight mode:</label></td>
+							<td><input type="checkbox" name="daylight_mode_enabled"></td>
+						</tr>
+						<tr>
+							<td class="text-center"><label><input type="checkbox" name="apply_lightupdatedrop"></label></td>
+							<td><label for="lightupdatedrop">Lighting - Update when Token Drop:</label></td>
+							<td><input type="checkbox" name="lightupdatedrop"></td>
+						</tr>
+					</tbody>
+				</table>
+                <hr>
+				<p style="text-align: right;"><button name="btn-apply" class="btn btn-primary modifier">Apply</button></p>
+				</div>
+				`,
+			dialogFn: () => {
+				$("#d20plus-mass-page-modify").dialog({
+					autoOpen: false,
+					resizable: true,
+					width: 600,
+					height: 800,
+				});
+			},
+			openFn: () => {
+				const $win = $("#d20plus-mass-page-modify");
+				$win.dialog("open");
+
+				const $lst = $win.find(`.list`).empty();
+
+				d20.Campaign.pages.models.forEach(m => {
+					$lst.append(`
+							<label class="import-cb-label import-cb-label--img" data-listid="${m.id}">
+								<input type="checkbox">
+								<img class="import-label__img" src="${m.attributes.thumbnail}">
+								<span class="name col-9">${m.attributes.name}</span>
+								<span style="display: none;" class="page-id">${m.id}</span>
+							</label>
+						`);
+				});
+
+				const pageList = new List( $win.find("[name=modify-pages-list]").get(0), {
+					valueNames: ["name", "page-id"],
+				});
+
+				const $cbAll = $win.find(`.select-all`).off("click").click(() => {
+					pageList.items.forEach(it => {
+						$(it.elm).find(`input[type="checkbox"]`).prop("checked", $cbAll.prop("checked"));
+					});
+				});
+
+				function collectCheckedInputs () {
+					const table = $win.find("[name=modifications-table]").get(0);
+					const rows = table.querySelectorAll("tbody tr");
+					const checkedInputs = [];
+
+					rows.forEach(row => {
+						const applyCheckbox = row.querySelector(`td:first-child input[type="checkbox"]`);
+						if (applyCheckbox.checked) {
+							const input = row.querySelector(`[name="${applyCheckbox.name.slice("apply_".length)}"]`)
+							let inputValue = ""
+
+							if (input.type === "checkbox") inputValue = input.checked;
+							else inputValue = input.options[input.selectedIndex].value;
+
+							checkedInputs.push({
+								label: input.name,
+								value: inputValue,
+							});
+						}
+					});
+					return checkedInputs
+				}
+
+				const $btnMod = $win.find("[name=btn-apply]").off("click").click(() => {
+					const sel = pageList.items
+						.filter(it => $(it.elm).find(`input`).prop("checked"))
+						.map(it => $(it.elm).attr("data-listid"))
+						.map(pId => d20.Campaign.pages.models.find(it => it.id === pId))
+						.filter(it => it);
+
+					const checkedInputs = collectCheckedInputs()
+					sel.forEach(model => {
+						checkedInputs.forEach(change => { model.attributes[change.label] = change.value});
+						model.save();
 					});
 					$cbAll.prop("checked", false);
 				});
