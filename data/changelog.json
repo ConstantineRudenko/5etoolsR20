@@ -431,5 +431,10 @@
 		"ver": "1.35.11",
 		"date": "2024-08-18",
 		"txt": "- Added various new filters to the Monster Importer (thanks @ redweller)\n- Fixed incompatibility with updated Page Toolbar (thanks @ redweller)\n- Fixed Art Browser failing to load (thanks @ redweller)\n- Updated to latest 5etools dataset (thanks @ redweller)"
+	},
+	{
+		"ver": "1.35.12",
+		"date": "",
+		"txt": "- Added door/window support to Module Importer/Exporter tool (thanks @ csagataj2)\n- Added Mass-Modify Pages tool (thanks @ csagataj2)"
 	}
 ]
