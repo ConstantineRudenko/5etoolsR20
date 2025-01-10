@@ -14,7 +14,7 @@ Usable scripts can be produced with `npm run build`; this output to the `dist/` 
 
 # Code Style
 
-Adhere to the code style defined in `.eslintrc.js`. ESLint is popular enough that most IDEs have plugins to support in-editor hinting/auto-formatting, should you want to use it.
+Adhere to the code style defined in `eslint.config.mjs`. ESLint is popular enough that most IDEs have plugins to support in-editor hinting/auto-formatting, should you want to use it.
 
 Due to the nature of the codebase (which includes ancient relics, questionable hacks, `eval`s, and blocks of partially-minified code), `eslint-disable` is often used to temporarily disable the linter. This should only be done as a matter of absolute necessity. Where possible, rewrite code to avoid this (for instance, implement high-quality error handling which provides visible feedback to the user, instead of logging to the console). The main exception to this rule concerns modded minified Roll20 code--avoid changes here, to allow easier future "diffs" versus Roll20's live version.
 

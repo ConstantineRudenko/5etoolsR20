@@ -1023,7 +1023,7 @@ function d20plusMonsters () {
 								const callbacks = [];
 								const id = d20plus.ut.generateRowId();
 
-								/* eslint-disable block-spacing, no-extra-semi */
+								/* eslint-disable block-spacing */
 								let lvl = page.data["Level"] && page.data["Level"] > 0 ? page.data["Level"] : "cantrip";
 								update[`repeating_spell-${lvl}_${id}_spelllevel`] = lvl;
 								if (page.data["spellcasting_ability"]) {
@@ -1078,7 +1078,7 @@ function d20plusMonsters () {
 
 								// custom writing:
 								setAttrs(update, callbacks);
-								/* eslint-enable block-spacing, no-extra-semi */
+								/* eslint-enable block-spacing */
 							}
 
 							processDrop(data);
@@ -1398,13 +1398,14 @@ function d20plusMonsters () {
 				}
 			};
 
+			const ptCr = (data.cr ? (data.cr.cr || data.cr) : "").replace(/\//g, " over ");
 			const newChar = d20.Campaign.characters.create(
 				{
 					name: data._displayName || data.name,
 					tags: d20plus.importer.getTagString([
 						pType.type,
 						...pType.tags,
-						`cr ${(data.cr ? (data.cr.cr || data.cr) : "").replace(/\//g, " over ")}` || "unknown cr",
+						ptCr ? `cr ${ptCr}` : "unknown cr",
 						Parser.sourceJsonToFull(data.source),
 						Renderer.utils.getRenderedSize(data.size),
 						...(data.environment || []),

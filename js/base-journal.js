@@ -141,6 +141,7 @@ function d20plusJournal () {
 			const name = item?.attributes.name || "Unnamed";
 			if (!item?.attributes.hasOwnProperty("name") || !item?.attributes.hasOwnProperty("avatar")) {
 				// TODO user-visible feedback? Toast message?
+				// eslint-disable-next-line no-console
 				return console.error(`Selected journal item does not have a "name" and/or "avatar" field!`);
 			}
 			d20plus.ut.log(`Setting avatar for ${name}`);

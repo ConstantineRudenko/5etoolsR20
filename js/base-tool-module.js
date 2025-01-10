@@ -624,8 +624,8 @@ function baseToolModule () {
 									graphics: (map.thegraphics || []).map(g => g.attributes),
 									text: (map.thetexts || []).map(t => t.attributes),
 									paths: (map.thepaths || []).map(p => p.attributes),
-                                    doors: (map.doors || []).map(d => d.attributes),
-                                    windows: (map.windows || []).map(w => w.attributes),
+									doors: (map.doors || []).map(d => d.attributes),
+									windows: (map.windows || []).map(w => w.attributes),
 								};
 							};
 

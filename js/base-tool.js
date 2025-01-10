@@ -643,7 +643,7 @@ function baseTool () {
 						`);
 				});
 
-				const pageList = new List( $win.find("[name=modify-pages-list]").get(0), {
+				const pageList = new List($win.find("[name=modify-pages-list]").get(0), {
 					valueNames: ["name", "page-id"],
 				});
 
@@ -685,7 +685,7 @@ function baseTool () {
 
 					const checkedInputs = collectCheckedInputs()
 					sel.forEach(model => {
-						checkedInputs.forEach(change => { model.attributes[change.label] = change.value});
+						checkedInputs.forEach(change => { model.attributes[change.label] = change.value });
 						model.save();
 					});
 					$cbAll.prop("checked", false);
